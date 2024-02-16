@@ -1,7 +1,7 @@
 #!/usr/bin/env fish
 
 # read in an argument like this
-# "557. Two sum" sql
+# `./new_problem.fish "557. Two Sum" sql`
 # creates a file named e.g. 557.sql
 # appends -- 557 Two sum
 
