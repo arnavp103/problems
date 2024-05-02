@@ -103,20 +103,25 @@ input1 = """123457
 124355
 """
 
+
 def parse1(input: str) -> List[int]:
-	return [int(x) for x in input.splitlines()]
+    return [int(x) for x in input.splitlines()]
+
 
 def fuel(mass: int) -> int:
-	return mass // 3 - 2
+    return mass // 3 - 2
+
 
 print(sum(fuel(mass) for mass in parse1(input1)))
 
 # part 2
 
+
 def recursive_fuel(mass: int) -> int:
-	f = fuel(mass)
-	if f <= 0:
-		return 0
-	return f + recursive_fuel(f)
+    f = fuel(mass)
+    if f <= 0:
+        return 0
+    return f + recursive_fuel(f)
+
 
 print(sum(recursive_fuel(mass) for mass in parse1(input1)))

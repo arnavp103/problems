@@ -1497,47 +1497,50 @@ K)L"""
 
 @dataclass
 class Node:
-	name: str
-	children: List['Node']
-	parent: Optional['Node'] = None
+    name: str
+    children: List["Node"]
+    parent: Optional["Node"] = None
 
-	def __init__(self, name: str):
-		self.name = name
-		self.parent = None
-		self.children = []
+    def __init__(self, name: str):
+        self.name = name
+        self.parent = None
+        self.children = []
 
-	def __repr__(self):
-		return f"{self.name} ({self.parent.name if self.parent else None})"
+    def __repr__(self):
+        return f"{self.name} ({self.parent.name if self.parent else None})"
 
-	def __hash__(self) -> int:
-		return hash(self.name)
+    def __hash__(self) -> int:
+        return hash(self.name)
 
-def parse1(input: str) -> Dict[str, Node]:
-	nodes = {}
-	for line in input.splitlines():
-		parent, child = line.split(")")
 
-		if parent not in nodes:
-			nodes[parent] = Node(parent)
-		if child not in nodes:
-			nodes[child] = Node(child)
+def parse1(inp: str) -> Dict[str, Node]:
+    nodes = {}
+    for line in inp.splitlines():
+        parent, child = line.split(")")
 
-		nodes[child].parent = nodes[parent]
-		if nodes[parent].children is None:
-			nodes[parent].children = []
+        if parent not in nodes:
+            nodes[parent] = Node(parent)
+        if child not in nodes:
+            nodes[child] = Node(child)
 
-		nodes[parent].children.append(nodes[child])
-	return nodes
+        nodes[child].parent = nodes[parent]
+        if nodes[parent].children is None:
+            nodes[parent].children = []
+
+        nodes[parent].children.append(nodes[child])
+    return nodes
+
 
 # print(parse1(test1))
 
+
 def count_orbits(nodes: Dict[str, Node]) -> int:
-	total = 0
-	for node in nodes.values():
-		while node.parent:
-			total += 1
-			node = node.parent
-	return total
+    total = 0
+    for node in nodes.values():
+        while node.parent:
+            total += 1
+            node = node.parent
+    return total
 
 
 print(count_orbits(parse1(input1)))
@@ -1558,37 +1561,37 @@ K)L
 K)YOU
 I)SAN"""
 
+
 def find_path(nodes: Dict[str, Node], end1: str, end2: str) -> int:
-	chain1: Set[str] = set()
-	chain2: Set[str] = set()
+    chain1: Set[str] = set()
+    chain2: Set[str] = set()
 
-	node1 = nodes[end1]
-	c1 = 0
-	counts1 = {}
+    node1 = nodes[end1]
+    c1 = 0
+    counts1 = {}
 
-	node2 = nodes[end2]
-	c2 = 0
-	counts2 = {}
+    node2 = nodes[end2]
+    c2 = 0
+    counts2 = {}
 
-	while node1.parent or node2.parent:
-		if node1.parent:
-			node1 = node1.parent
-			counts1[node1] = c1
-			c1 += 1
-			chain1.add(node1.name)
-		if node2.parent:
-			node2 = node2.parent
-			counts2[node2] = c2
-			c2 += 1
-			chain2.add(node2.name)
+    while node1.parent or node2.parent:
+        if node1.parent:
+            node1 = node1.parent
+            counts1[node1] = c1
+            c1 += 1
+            chain1.add(node1.name)
+        if node2.parent:
+            node2 = node2.parent
+            counts2[node2] = c2
+            c2 += 1
+            chain2.add(node2.name)
 
-		inter = chain1.intersection(chain2)
-		if inter != set():
-			x = inter.pop()
-			return counts1[nodes[x]] + counts2[nodes[x]]
+        inter = chain1.intersection(chain2)
+        if inter != set():
+            x = inter.pop()
+            return counts1[nodes[x]] + counts2[nodes[x]]
 
-	return 0
-
+    return 0
 
 
 print(find_path(parse1(input1), "YOU", "SAN"))
