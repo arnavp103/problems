@@ -9,16 +9,16 @@ class Solution:
     ) -> list[int]:
         # min heap of left wards robots
         # deque of right wards robots
-        left_bots = []
-        right_bots = []
+        left_bots: list[tuple[str, int]] = []
+        right_start = []
         for i, (p, d) in enumerate(zip(positions, directions)):
             if d == "L":
                 heapq.heappush(left_bots, (p, i))
             else:
-                right_bots.append((p, i))
+                right_start.append((p, i))
 
-        right_bots.sort(key=lambda x: x[0])
-        right_bots = deque(right_bots)
+        right_start.sort(key=lambda x: x[0])
+        right_bots = deque(right_start)
 
         while len(left_bots) > 0 and len(right_bots) > 0:
             left_pos, left_ind = heapq.heappop(left_bots)
