@@ -28,6 +28,8 @@ class WordDictionary:
 
         for possible_node in node.values():
             # if possible_node is a sentinel, then skip it
+            # can't just `if possible_node`
+            # because possible node is also a dictionary which is truthy
             if possible_node == True:
                 continue
 

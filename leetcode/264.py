@@ -15,7 +15,7 @@ class Solution:
         threes = 0
         fives = 0
 
-        for i in range(1, n):
+        for _ in range(1, n):
             prev = ugly_numbers[-1]
 
             if ugly_numbers[twos] * 2 <= prev:
