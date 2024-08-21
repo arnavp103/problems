@@ -17,3 +17,4 @@ class Solution:
                 for idx in indices[diff]:
                     if idx != i:
                         return [i, idx]
+        return [-1]
