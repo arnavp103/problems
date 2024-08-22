@@ -17,6 +17,7 @@ function new_problem
 	touch $filename
 	echo "$num $name" >> $filename
 	echo "Created $filename"
+	clear
 	code $filename
 end
 
