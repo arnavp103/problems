@@ -375,11 +375,8 @@ function part2(input: string): number {
 		[7, 1],
 		[1, 2]
 	];
-	const res: number[] = [];
-	for (const pair of slopes) {
-		const colls = countTrees(input, pair[0], pair[1]);
-		res.push(colls);
-	}
+
+	const res = slopes.map(pair => countTrees(input, pair[0], pair[1]));
 	return res.reduce((prev, curr) => curr * prev);
 }
 
