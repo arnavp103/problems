@@ -17,12 +17,13 @@
 # After following the instructions, how many lights are lit?
 
 defmodule Solution do
-  def parse_coordinates(coordinates) do
-    [x, y] = String.split(coordinates, ",")
-    {String.to_integer(x), String.to_integer(y)}
+  defp parse_coordinates(coordinates) do
+    [y, x] = String.split(coordinates, ",")
+
+    {String.to_integer(y), String.to_integer(x)}
   end
 
-  def parse_instruction(instruction) do
+  defp parse_instruction(instruction) do
     case String.split(instruction, " ") do
       ["turn", "on", from, "through", to] ->
         {:turn_on, parse_coordinates(from), parse_coordinates(to)}
@@ -35,10 +36,71 @@ defmodule Solution do
     end
   end
 
-  def part1(input) do
+  defp turn_on(grid, from, to) do
+    {from_y, from_x} = from
+    {to_y, to_x} = to
+
+    grid
+    |> Enum.with_index()
+    |> Enum.map(fn {row, y} ->
+      row
+      |> Enum.with_index()
+      |> Enum.map(fn {light, x} ->
+        if x >= from_x && x <= to_x && y >= from_y && y <= to_y do
+          1
+        else
+          light
+        end
+      end)
+    end)
+  end
+
+  defp turn_off(grid, from, to) do
+    {from_y, from_x} = from
+    {to_y, to_x} = to
+
+    grid
+    |> Enum.with_index()
+    |> Enum.map(fn {row, y} ->
+      row
+      |> Enum.with_index()
+      |> Enum.map(fn {light, x} ->
+        if x >= from_x && x <= to_x && y >= from_y && y <= to_y do
+          0
+        else
+          light
+        end
+      end)
+    end)
+  end
+
+  defp toggle(grid, from, to) do
+    {from_y, from_x} = from
+    {to_y, to_x} = to
+
+    grid
+    |> Enum.with_index()
+    |> Enum.map(fn {row, y} ->
+      row
+      |> Enum.with_index()
+      |> Enum.map(fn {light, x} ->
+        if x >= from_x && x <= to_x && y >= from_y && y <= to_y do
+          if light == 0 do
+            1
+          else
+            0
+          end
+        else
+          light
+        end
+      end)
+    end)
+  end
+
+  def part1(input, size) do
     grid =
-      for _ <- 1..1000 do
-        Enum.map(1..1000, fn _ -> 0 end)
+      for _ <- 1..size do
+        Enum.map(1..size, fn _ -> 0 end)
       end
 
     input
@@ -46,57 +108,109 @@ defmodule Solution do
     |> Enum.map(&parse_instruction/1)
     |> Enum.reduce(
       grid,
-      fn {move, {from_x, from_y}, {to_x, to_y}}, grid ->
-        case move do
-          :turn_on ->
-            grid
-            |> Enum.map(fn row ->
-              Enum.map(row, fn light ->
-                if from_x <= light && light <= to_x && from_y <= light && light <= to_y do
-                  1
-                else
-                  light
-                end
-              end)
-            end)
-
-          :turn_off ->
-            grid
-            |> Enum.map(fn row ->
-              Enum.map(row, fn light ->
-                if from_x <= light && light <= to_x && from_y <= light && light <= to_y do
-                  0
-                else
-                  light
-                end
-              end)
-            end)
-
-          :toggle ->
-            grid
-            |> Enum.map(fn row ->
-              Enum.map(row, fn light ->
-                if from_x <= light && light <= to_x && from_y <= light && light <= to_y do
-                  if light == 0 do
-                    1
-                  else
-                    0
-                  end
-                else
-                  light
-                end
-              end)
-            end)
+      fn {case, from, to}, grid ->
+        case case do
+          :turn_on -> turn_on(grid, from, to)
+          :turn_off -> turn_off(grid, from, to)
+          :toggle -> toggle(grid, from, to)
         end
       end
     )
-    |> Enum.filter(&(&1 == 1))
-    |> Enum.count(& &1)
+    |> Enum.filter(fn row -> Enum.filter(row, &(&1 == 1)) end)
+    |> Enum.map(fn row -> Enum.sum(row) end)
+    # |> dbg()
+    |> Enum.sum()
+  end
+
+  defp turn_on_2(grid, from, to) do
+    {from_y, from_x} = from
+    {to_y, to_x} = to
+
+    grid
+    |> Enum.with_index()
+    |> Enum.map(fn {row, y} ->
+      row
+      |> Enum.with_index()
+      |> Enum.map(fn {light, x} ->
+        if x >= from_x && x <= to_x && y >= from_y && y <= to_y do
+          light + 1
+        else
+          light
+        end
+      end)
+    end)
+  end
+
+  defp turn_off_2(grid, from, to) do
+    {from_y, from_x} = from
+    {to_y, to_x} = to
+
+    grid
+    |> Enum.with_index()
+    |> Enum.map(fn {row, y} ->
+      row
+      |> Enum.with_index()
+      |> Enum.map(fn {light, x} ->
+        if x >= from_x && x <= to_x && y >= from_y && y <= to_y do
+          if light > 0 do
+            light - 1
+          else
+            0
+          end
+        else
+          light
+        end
+      end)
+    end)
+  end
+
+  defp toggle_2(grid, from, to) do
+    {from_y, from_x} = from
+    {to_y, to_x} = to
+
+    grid
+    |> Enum.with_index()
+    |> Enum.map(fn {row, y} ->
+      row
+      |> Enum.with_index()
+      |> Enum.map(fn {light, x} ->
+        if x >= from_x && x <= to_x && y >= from_y && y <= to_y do
+          light + 2
+        else
+          light
+        end
+      end)
+    end)
+  end
+
+  def part2(input, size) do
+    grid =
+      for _ <- 1..size do
+        Enum.map(1..size, fn _ -> 0 end)
+      end
+
+    input
+    |> String.split("\n", trim: true)
+    |> Enum.map(&parse_instruction/1)
+    |> Enum.reduce(
+      grid,
+      fn {case, from, to}, grid ->
+        case case do
+          :turn_on -> turn_on_2(grid, from, to)
+          :turn_off -> turn_off_2(grid, from, to)
+          :toggle -> toggle_2(grid, from, to)
+        end
+      end
+    )
+    |> Enum.map(fn row -> Enum.sum(row) end)
+    |> Enum.sum()
   end
 
   def main do
     input = File.read!("day6_input.txt") |> String.trim_trailing()
-    IO.puts("Part 1: #{part1(input)}")
+    size = 1000
+    IO.puts("Part 1: #{part1(input, size)}")
+    IO.puts("Part 2: #{part2(input, size)}")
   end
 end
 
