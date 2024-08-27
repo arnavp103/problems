@@ -3,9 +3,9 @@
 
 
 # The isBadVersion API is already defined for you.
-def _isBadVersion(version: int) -> bool:
+def isBadVersion(version: int) -> bool:
     """assumed to be working as a black box"""
-    pass
+    return version == 4
 
 
 class Solution:
