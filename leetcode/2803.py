@@ -21,7 +21,7 @@ class Solution:
         # since the max value of a negative edge is 1e9, if we do have
         # a shortest path that reaches target, then set everything else to 2e9
         top = int(2e9)
-        graph = {}
+        graph: dict[int, dict[int, int]] = {}
 
         for n1, n2, weight in edges:
             if n1 not in graph:
