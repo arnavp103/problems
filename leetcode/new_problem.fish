@@ -1,4 +1,4 @@
-#!/usr/bin/env fish
+#!/usr/local/bin/fish
 
 # Sample usage:
 # `./new_problem.fish "557. Two Sum" sql`
